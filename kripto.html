@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>kripto</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: monospace;
+        }
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #inputText, #outputText {
+            width: 80%;
+            height: 100px;
+            margin: 10px auto;
+            display: block;
+            border: 2px solid red;
+            background-color: black;
+            color: white;
+        }
+        button {
+            margin-top: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        #container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    <div id="container">
+        <h1>Kripto</h1>
+        <textarea id="inputText" placeholder="Insira o texto aqui"></textarea><br>
+        <button onclick="encryptText()">Criptografar</button>
+        <button onclick="decryptText()">Descriptografar</button>
+        <button onclick="copyText()">Copiar</button><br>
+        <textarea id="outputText" placeholder="Texto criptografado/descriptografado"></textarea>
+    </div>
+
+    <script>
+        function encryptText() {
+            var inputText = document.getElementById("inputText").value;
+            var encryptedText = btoa(inputText);
+            document.getElementById("outputText").value = encryptedText;
+        }
+
+        function decryptText() {
+            var inputText = document.getElementById("inputText").value;
+            var decryptedText = atob(inputText);
+            document.getElementById("outputText").value = decryptedText;
+        }
+
+        function copyText() {
+            var outputText = document.getElementById("outputText");
+            outputText.select();
+            document.execCommand("copy");
+        }
+
+        // Matrix effect
+        var c = document.getElementById("matrix");
+        var ctx = c.getContext("2d");
+
+        // Set canvas size
+        c.height = window.innerHeight;
+        c.width = window.innerWidth;
+
+        // Characters
+        var characters = "0123456789";
+        characters = characters.split("");
+
+        // Font size
+        var fontSize = 16;
+
+        // Columns
+        var columns = c.width / fontSize;
+
+        // Drops
+        var drops = [];
+        for (var x = 0; x < columns; x++) {
+            drops[x] = 1; 
+        }
+
+        // Draw
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "red";
+            ctx.font = fontSize + "px monospace";
+            
+            for (var i = 0; i < drops.length; i++) {
+                var text = characters[Math.floor(Math.random() * characters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > c.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+       setInterval(draw, 33);
+    </script>
+</body>
+</html>
